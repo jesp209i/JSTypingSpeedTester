@@ -1,13 +1,20 @@
 const testWrapper = document.querySelector(".test-wrapper");
 const testArea = document.querySelector("#test-area");
-const originText = document.querySelector("#origin-text p").innerHTML;
 const resetButton = document.querySelector("#reset");
 const theTimer = document.querySelector(".timer");
+const mistakesField = document.querySelector("#mistakes");
+const wpmField = document.querySelector("#wpm");
+const selectorField = document.querySelector("#text-selector");
+
 const newTexts = ["The text to test.", "More text to test on.", "What a time to live"];
+
+var originText = document.querySelector("#origin-text p").innerHTML;
 
 var timer = [0, 0, 0, 0];
 var interval;
 var timerRunning = false;
+var mistakeCounter = 0;
+
 
 // Add leading zero to numbers 9 or below (purely for aesthetics):
 function leadingZero(time) {
@@ -33,7 +40,12 @@ function runTimer() {
 function spellCheck() {
     let textEntered = testArea.value;
     let originTextMatch = originText.substring(0, textEntered.length);
-
+    let words = textEntered.split(' ').length;
+    let wordsPrMinute = 0;
+    if (timer[1] > 0) {
+        wordsPrMinute = (words / timer[1]) * 60;
+    }
+    wpmField.innerHTML = wordsPrMinute;
     if (textEntered == originText) {
         clearInterval(interval);
         testWrapper.style.borderColor = "#429890";
@@ -43,6 +55,8 @@ function spellCheck() {
             testWrapper.style.borderColor = "#65CCF3";
         } else {
             testWrapper.style.borderColor = "#E95D0F";
+            mistakeCounter++;
+            mistakesField.innerHTML = mistakeCounter;
         }
     }
 }
@@ -70,11 +84,29 @@ function reset() {
     testArea.value = "";
     theTimer.innerHTML = "00:00:00";
     testWrapper.style.borderColor = "grey";
-
+    mistakeCounter = 0;
+    mistakesField.innerHTML = 0;
+    wpmField.innerHTML = 0;
     console.log("reset was pressed");
 }
+
+function changeText() {
+    var selectedTextIndex = selectorField.selectedIndex;
+    originText = newTexts[selectedTextIndex];
+    console.log("text was changed to " + newTexts[selectedTextIndex]);
+}
+
+(function populateSelect() {
+    let newTextsCount = newTexts.length;
+    for (var i = 0; i < newTextsCount; i++) {
+        var option = document.createElement("option");
+        option.text = newTexts[i];
+        selectorField.add(option)
+    }
+}());
 
 // Event listeners for keyboard input and the reset button:
 testArea.addEventListener("keypress", start, false);
 testArea.addEventListener("keyup", spellCheck, false);
 resetButton.addEventListener("click", reset, false);
+selectorField.addEventListener("change", changeText, false);

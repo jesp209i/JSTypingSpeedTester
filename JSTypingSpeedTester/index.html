@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>JS Typing Speed Test</title>
-    <script src="script.js" async></script>
+    <script src="script.js" defer></script>
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,700,700i,900,900i" type="text/css" media="all">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -34,6 +34,13 @@
 
                 <button id="reset">Start over</button>
             </div><!-- .meta -->
+            <div class="meta">
+                <p>You have made <span id="mistakes">0</span> mistakes</p>
+                <p>Words per minute: <span id="wpm">0</span></p>
+            </div>
+            <div class="meta">
+                <select id="text-selector"></select>
+            </div>
         </section><!-- .test-area -->
     </main>
 
