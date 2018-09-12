@@ -92,8 +92,10 @@ function reset() {
 
 function changeText() {
     var selectedTextIndex = selectorField.selectedIndex;
-    originText = newTexts[selectedTextIndex];
+    originText = newTexts[selectedTextIndex]
+    document.querySelector("#origin-text p").innerHTML = originText;
     console.log("text was changed to " + newTexts[selectedTextIndex]);
+    console.log(originText);
 }
 
 (function populateSelect() {
@@ -103,6 +105,7 @@ function changeText() {
         option.text = newTexts[i];
         selectorField.add(option)
     }
+    document.querySelector("#origin-text p").innerHTML = newTexts[0];
 }());
 
 // Event listeners for keyboard input and the reset button:
