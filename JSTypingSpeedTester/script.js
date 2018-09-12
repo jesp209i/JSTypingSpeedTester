@@ -5,10 +5,12 @@ const theTimer = document.querySelector(".timer");
 const mistakesField = document.querySelector("#mistakes");
 const wpmField = document.querySelector("#wpm");
 const selectorField = document.querySelector("#text-selector");
+const originTextField = document.querySelector("#origin-text p");
+const highscore = document.querySelector("#highscore");
 
 const newTexts = ["The text to test.", "More text to test on.", "What a time to live"];
 
-var originText = document.querySelector("#origin-text p").innerHTML;
+var originText = originTextField.innerHTML;
 
 var timer = [0, 0, 0, 0];
 var interval;
@@ -29,7 +31,6 @@ function runTimer() {
     let currentTime = leadingZero(timer[0]) + ":" + leadingZero(timer[1]) + ":" + leadingZero(timer[2]);
     theTimer.innerHTML = currentTime;
     timer[3]++;
-
     timer[0] = Math.floor((timer[3] / 100) / 60);
     timer[1] = Math.floor((timer[3] / 100) - (timer[0] * 60));
     timer[2] = Math.floor(timer[3] - (timer[1] * 100) - (timer[0] * 6000));
@@ -49,6 +50,7 @@ function spellCheck() {
     if (textEntered == originText) {
         clearInterval(interval);
         testWrapper.style.borderColor = "#429890";
+        addHighScore(theTimer.innerHTML);
         console.log("you won. Your time is: " + theTimer.innerHTML);
     } else {
         if (textEntered == originTextMatch) {
@@ -65,37 +67,40 @@ function spellCheck() {
 function start() {
     let textEnteredLength = testArea.value.length;
     if (textEnteredLength === 0 && !timerRunning) {
-        console.log("started");
         timerRunning = true;
         interval = setInterval(runTimer, 10);
     }
-    console.log("still running");
-
-
 }
 
 // Reset everything:
 function reset() {
+// clear almost all states in app
     clearInterval(interval);
     interval = null;
     timer = [0, 0, 0, 0];
     timerRunning = false;
-
     testArea.value = "";
     theTimer.innerHTML = "00:00:00";
     testWrapper.style.borderColor = "grey";
     mistakeCounter = 0;
     mistakesField.innerHTML = 0;
     wpmField.innerHTML = 0;
+
     console.log("reset was pressed");
 }
 
 function changeText() {
     var selectedTextIndex = selectorField.selectedIndex;
     originText = newTexts[selectedTextIndex]
-    document.querySelector("#origin-text p").innerHTML = originText;
+    originTextField.innerHTML = originText;
     console.log("text was changed to " + newTexts[selectedTextIndex]);
     console.log(originText);
+}
+
+function addHighScore(time) {
+    var listelement = document.createElement("li");
+    listelement.textContent = time;
+    highscore.appendChild(listelement);
 }
 
 (function populateSelect() {
@@ -105,7 +110,8 @@ function changeText() {
         option.text = newTexts[i];
         selectorField.add(option)
     }
-    document.querySelector("#origin-text p").innerHTML = newTexts[0];
+    originText = newTexts[0];
+    originTextField.innerHTML = originText;
 }());
 
 // Event listeners for keyboard input and the reset button:
